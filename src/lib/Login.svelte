@@ -33,11 +33,16 @@
     pb.authStore.clear();
   }
 
+  async function joinRoom() {
+    pb.send('/wired_cafe/rooms/join_best/test_room2', {})
+  }
+
 </script>
 
 {#if $currentUser}
   <p>
     Signed in as {$currentUser.username} 
+    <button on:click={joinRoom}>Join Test Room</button>
     <button on:click={signOut}>Sign Out</button>
   </p>
 {:else}
