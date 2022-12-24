@@ -61,6 +61,8 @@
     />
     <br>
 
+    <button on:click={login}>Login</button>
+    <br>
     {#if isSignupMode == true}
         <input transition:fly="{{ x: 200, duration: 500 }}"
           placeholder="E-Mail"
@@ -69,13 +71,9 @@
         />
         <br>
         <button on:click={signUp}>Sign Up</button>
-    {/if}
-
-    {#if isSignupMode == false}
+    {:else}
         <button on:click={() => {isSignupMode = true}}>Sign Up</button>
     {/if}
-    <br>
-    <button on:click={login}>Login</button>
   </form>
 {/if}
 
