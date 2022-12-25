@@ -1,6 +1,7 @@
 <script lang="ts">
-  import { currentUser, pb } from './pocketbase';
-  import { fly } from 'svelte/transition';
+    import { currentUser, pb } from './pocketbase';
+    import { fly } from 'svelte/transition';
+    import { runData, runDataLeaveRoom } from './stores';
 
   let username: string;
   let email: string;
@@ -30,7 +31,8 @@
   }
 
   function signOut() {
-    pb.authStore.clear();
+      if ($runData.isInRoom) { runDataLeaveRoom(); }
+      pb.authStore.clear();
   }
 
   async function joinRoom() {

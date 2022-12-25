@@ -1,29 +1,23 @@
 <script lang="ts">
     import LandingScreen from "./lib/LandingScreen.svelte";
     import Login from "./lib/Login.svelte";
+    import Room from "./lib/Room.svelte";
     import { currentUser, pb } from './lib/pocketbase';
-    import { onDestroy, onMount } from 'svelte';
-
-    // register a keepalive function to run every 30 seconds
-    onMount(() => {
-        async function sendKeepalive() {
-            if ($currentUser) {
-                const data = {
-                        "last_alive": new Date().toISOString(),
-                    }
-                pb.collection('users').update(pb.authStore.model.id, data)
-            }
-        }
-        const keepalive = setInterval(sendKeepalive, 30 * 1000); // send the keepalive every 30 seconds
-        sendKeepalive();
-        return () => clearInterval(keepalive)
-    });
+    import { runData, roomData } from "./lib/stores";
+    $: console.log($runData)
+    $: console.log($roomData)
 </script>
 
 <main>
      <Login /> <!-- Always show login, as it also handles logout -->
      {#if $currentUser}
-         <LandingScreen />
+         {#if $runData.isInRoom}
+             <Room />
+         {:else if $runData.isInCustomization}
+             <Room />
+         {:else}
+             <LandingScreen />
+         {/if}
      {/if}
     <button on:click={() => {console.log(pb.authStore.model)}}>Print Auth Model</button>
 </main>

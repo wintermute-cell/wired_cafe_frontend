@@ -1,6 +1,7 @@
 <script lang="ts">
-    import { fly } from 'svelte/transition';
     import { currentUser, pb } from './pocketbase';
+    import { runData, roomData, roomDataSet } from './stores';
+    import type { RunData, RoomData } from './stores';
 
     let errorMsg: string = "";
 
@@ -10,9 +11,31 @@
         {type: "test_room3", name: "Test Room Type 3"},
     ];
 
-    function sendJoinRoomRequest(reqestedType: string) {
-        pb.send(`/wired_cafe/rooms/join_best/${reqestedType}`, {})
-        .then(response => { console.log(response); }, response => {errorMsg = response});
+    function enterRoom() {
+        runData.update((prev: RunData) => ({...prev, isInRoom: true}))
+    }
+
+    function handleJoinSuccess(response: any) {
+        console.log(response);
+        // remove self from other_users
+        const idx = response.current_users.indexOf(pb.authStore.model.id);
+        let other_users: Array<string>;
+        if (idx >= 0) { 
+            other_users =  response.current_users.splice(idx, 1);
+        }
+        roomDataSet(response.type, other_users);
+        enterRoom(); 
+    }
+    function handleJoinFailure(response: any) {
+        errorMsg = response;
+    }
+
+    function sendJoinRoomRequest(requestedType: string) {
+        pb.send(`/wired_cafe/rooms/join_best/${requestedType}`, {})
+        .then(
+            response => {handleJoinSuccess(response)},
+            response => {handleJoinFailure(response)}
+        );
     }
 </script>
 

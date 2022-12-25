@@ -1,5 +1,5 @@
 {
-  "name": "spock",
+  "name": "wired_cafe",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -19,6 +19,7 @@
     "vite": "^4.0.0"
   },
   "dependencies": {
+    "pixi.js": "^7.0.5",
     "pocketbase": "^0.9.0"
   }
 }
