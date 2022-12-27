@@ -3,9 +3,7 @@
     import Login from "./lib/Login.svelte";
     import Room from "./lib/Room.svelte";
     import { currentUser, pb } from './lib/pocketbase';
-    import { runData, roomData } from "./lib/stores";
-    $: console.log($runData)
-    $: console.log($roomData)
+    import { runData } from "./lib/stores";
 </script>
 
 <main>

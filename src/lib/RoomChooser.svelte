@@ -1,7 +1,7 @@
 <script lang="ts">
     import { currentUser, pb } from './pocketbase';
-    import { runData, roomData, roomDataSet } from './stores';
-    import type { RunData, RoomData } from './stores';
+    import { runData, roomIdStore } from './stores';
+    import type { RunData } from './stores';
 
     let errorMsg: string = "";
 
@@ -11,20 +11,14 @@
         {type: "test_room3", name: "Test Room Type 3"},
     ];
 
-    function enterRoom() {
+    function enterRoom(response: any) {
         runData.update((prev: RunData) => ({...prev, isInRoom: true}))
+        roomIdStore.set(response.id)
     }
 
     function handleJoinSuccess(response: any) {
         console.log(response);
-        // remove self from other_users
-        const idx = response.current_users.indexOf(pb.authStore.model.id);
-        let other_users: Array<string>;
-        if (idx >= 0) { 
-            other_users =  response.current_users.splice(idx, 1);
-        }
-        roomDataSet(response.type, other_users);
-        enterRoom(); 
+        enterRoom(response); 
     }
     function handleJoinFailure(response: any) {
         errorMsg = response;

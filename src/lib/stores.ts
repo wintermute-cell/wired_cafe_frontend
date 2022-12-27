@@ -1,5 +1,6 @@
-import { writable } from "svelte/store";
+import { writable, type Writable } from "svelte/store";
 import { pb } from './pocketbase';
+import type { Renderable } from "./rendering";
 
 // ---------------------------------------------------------------------------
 // RUN DATA: a store for general information about the flow of the application
@@ -20,29 +21,10 @@ export function runDataLeaveRoom() {
     .then(response => { console.log(response); }, response => { console.log(response) });
 }
 
+
 // ---------------------------------------------------------------------------
 // ROOM DATA: a store for information about the room the user currently is in
 // ---------------------------------------------------------------------------
-export interface RoomData {
-    type: string;
-    other_users: Array<string>;
-}
+export const roomIdStore = writable<string>();
 
-export const roomData = writable<RoomData>({ 
-    type: "",
-    other_users: [],
-});
-
-export function roomDataSet(type: string, other_users: Array<string>) {
-    roomData.set({ 
-        type: type,
-        other_users: other_users,
-    });
-}
-
-export function roomDataClear() {
-    roomData.set({ 
-        type: "",
-        other_users: [],
-    });
-}
+export const renderablesStore: Writable<Array<Renderable>> = writable([]);
